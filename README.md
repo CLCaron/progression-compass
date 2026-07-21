@@ -48,7 +48,9 @@ Chord parsing keeps the entered symbol separate from normalized root, quality, e
 
 Recommendations begin with curated songwriting routes, then score them against the selected tonal reading, emotional direction, common tones, ringing-high-E preference, and optional top note. Every card carries structured evidence; copy and emotion never become the source of musical truth. This MVP targets common songwriting harmony, not exhaustive jazz or chromatic analysis.
 
-Guitar voicings are data objects containing six standard-tuning fret values from low E to high E. `null` means muted and `0` means open. Visual diagrams, text tab, accessible descriptions, and pedal-tone detection all consume that same data.
+Guitar voicings are data objects containing six standard-tuning fret values from low E to high E. `null` means muted and `0` means open. Visual diagrams, text tab, accessible descriptions, exact-shape audio, and pedal-tone detection all consume that same data. Common major, minor, and dominant-seventh chords combine curated open shapes with movable CAGED E- and A-form shapes.
+
+“Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 
 ## Context ladder
 
@@ -56,7 +58,7 @@ Suggestions appear with chords alone. Emotional intent is one tap. When the sele
 
 ## Saving and sharing
 
-Saves use a validated `{ version: 1, progressions: [...] }` envelope. Invalid or corrupt browser data returns an empty safe state. Future schema changes should add explicit migration functions before the version is raised. Sharing encodes only version, chords, and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
+Saves use a validated `{ version: 2, progressions: [...] }` envelope and include the selected voicing for every chord. Version 1 saves migrate locally with default shapes; invalid or corrupt browser data returns an empty safe state. Sharing stays intentionally compact and encodes only version, chords, and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
 
 ## Where to add new musical rules
 
@@ -75,6 +77,6 @@ All musical and data logic is plain TypeScript with no React, DOM, storage, or a
 
 ## Current limitations and roadmap
 
-The first release covers common major/minor songwriting chords and a focused curated voicing library. It does not attempt exhaustive jazz notation, alternate tunings, rhythmic notation, a full fretboard, recording, transcription, or cloud sync. Missing guitar shapes do not block harmonic analysis.
+The first release covers common major/minor/dominant-seventh songwriting chords in standard tuning with open and movable E/A-form shapes. Extensions currently need a curated shape. It does not attempt exhaustive jazz notation, alternate tunings, rhythmic notation, a full fretboard, recording, transcription, or cloud sync. Missing guitar shapes do not block harmonic analysis.
 
 Possible later work: installable PWA behavior; Capacitor packaging and store releases; capo, left-handed and user-created shapes; alternate tunings; MIDI input/export and DAW export; bass lines, rhythm and melody harmonization; microphone recognition and rough-idea recording; cloud accounts, collaboration, native share sheets, offline mobile storage, haptics, richer sounds, and larger genre/section pattern libraries.
