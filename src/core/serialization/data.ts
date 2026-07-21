@@ -1,0 +1,5 @@
+﻿export interface SavedProgression{id:string;name:string;chords:string[];tempo:number;updatedAt:string}
+export interface SaveEnvelope{version:1;progressions:SavedProgression[]}
+export function isSaveEnvelope(value:unknown):value is SaveEnvelope{if(!value||typeof value!=='object')return false;const d=value as Partial<SaveEnvelope>;return d.version===1&&Array.isArray(d.progressions)&&d.progressions.every(p=>p&&typeof p.id==='string'&&typeof p.name==='string'&&Array.isArray(p.chords)&&p.chords.every(c=>typeof c==='string')&&typeof p.tempo==='number')}
+export const serializeShare=(chords:string[],key?:string)=>{const q=new URLSearchParams({v:'1',chords:chords.join(',')});if(key)q.set('key',key);return `?${q}`}
+export function parseShare(search:string):{chords:string[];key?:string}|null{const q=new URLSearchParams(search);if(q.get('v')!=='1')return null;const chords=q.get('chords')?.split(',').map(decodeURIComponent).filter(Boolean);if(!chords?.length||chords.length>32)return null;const key=q.get('key');return{chords,...(key?{key}:{})}}

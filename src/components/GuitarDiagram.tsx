@@ -1,0 +1,3 @@
+﻿import type {GuitarVoicing} from '../core/guitar/voicings'
+import {accessibleDescription,textTab} from '../core/guitar/voicings'
+export function GuitarDiagram({voicing}:{voicing:GuitarVoicing}){return <div className="guitar-detail"><div className="diagram" role="img" aria-label={accessibleDescription(voicing)}><div className="nut"/><div className="strings">{voicing.frets.map((f,i)=><div className="string" key={i}><span className="marker top">{f==null?'×':f===0?'○':''}</span>{f!=null&&f>0?<span className="finger" style={{top:`${10+(Math.min(f,4)-1)*24}px`}}/>:null}</div>)}</div><div className="frets">{[0,1,2,3].map(i=><span key={i}/>)}</div></div><div><span className="eyebrow">{voicing.label} shape</span><pre>{textTab(voicing)}</pre></div></div>}
