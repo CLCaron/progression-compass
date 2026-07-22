@@ -33,6 +33,7 @@ function movable(symbol:string):GuitarVoicing[]{
 export function voicingsFor(symbol:string){const normalized=parseChord(symbol)?.normalized??symbol;const items=[...curated.filter(v=>v.chord===normalized),...movable(normalized)];return items.filter((v,i)=>items.findIndex(other=>other.frets.join(',')===v.frets.join(','))===i)}
 export const midiNotes=(v:GuitarVoicing)=>v.frets.flatMap((f,i)=>f==null?[]:[tuning[i]!+f])
 export const pitchClassesForVoicing=(v:GuitarVoicing)=>[...new Set(midiNotes(v).map(n=>n%12))]
+export function customVoicing(chord:string,frets:FretMap):GuitarVoicing{const pressed=frets.filter((f):f is number=>f!=null&&f>0);const position=pressed.length?Math.min(...pressed):0;return{id:`custom-${chord}-${frets.map(f=>f??'x').join('-')}`,chord,frets,label:`Your shape · ${frets.map(f=>f??'x').join('')}`,position,difficulty:'moderate',barre:false,tags:['custom']}}
 export const isValidVoicing=(v:GuitarVoicing)=>{const chord=parseChord(v.chord);if(!chord)return false;const pcs=pitchClassesForVoicing(v);return pcs.every(pc=>chord.pitchClasses.includes(pc))&&pcs.includes(chord.rootPc)&&pcs.length>=Math.min(3,chord.pitchClasses.length)}
 export const hasOpenHighE=(symbols:string[])=>symbols.length>1&&symbols.every(symbol=>voicingsFor(symbol).some(v=>v.frets[5]===0))
 

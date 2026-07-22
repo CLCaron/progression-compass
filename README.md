@@ -50,6 +50,8 @@ Recommendations begin with curated songwriting routes, then score them against t
 
 Guitar voicings are data objects containing six standard-tuning fret values from low E to high E. `null` means muted and `0` means open. Visual diagrams, text tab, accessible descriptions, exact-shape audio, and pedal-tone detection all consume that same data. Common major, minor, and dominant-seventh chords combine curated open shapes with movable CAGED E- and A-form shapes.
 
+The chord finder reverses that relationship: a six-string shape such as `320033` becomes sounding notes and ranked chord candidates. It understands muted strings, inversions, doubled notes, and common chord extensions. Choosing a result preserves the exact entered shape in progression history and local saves.
+
 “Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 
 ## Context ladder
