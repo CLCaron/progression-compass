@@ -54,7 +54,7 @@ The chord finder reverses that relationship: a six-string shape such as `320033`
 
 “Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 
-The Song Map separates reusable section definitions from their appearances in the arrangement. A repeated verse or chorus can stay linked, become an independent variation, or start fresh. Section-aware starters translate roles such as chorus, bridge, and outro into different recommendation intentions while leaving every result editable.
+The Song Map separates reusable section definitions from their appearances in the arrangement. A repeated verse or chorus can stay linked, become an independent variation, or start fresh. New-section suggestions are transposed into the strongest tonal center inferred across all unique written sections, then scored for the target role, the preceding and following boundaries, harmonic familiarity versus contrast, duplicate avoidance, and the last selected guitar position. Each starter exposes the evidence behind its ranking and remains fully editable.
 
 ## Context ladder
 

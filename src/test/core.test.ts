@@ -5,7 +5,8 @@ import {identifyChord,parseShapeCode,shapeNoteNames} from '../core/guitar/finder
 import {generateSuggestions} from '../core/suggestions/engine'
 import {analyzeProgression} from '../core/theory/analysis'
 import {isSaveEnvelope,parseShare,readSavedSongs,serializeShare} from '../core/serialization/data'
-import {createSong,newInstance,sectionLabel,sectionStarters} from '../core/song/sections'
+import {createSong,newInstance,newSection,sectionLabel} from '../core/song/sections'
+import {wholeSongSectionStarters} from '../core/song/sectionSuggestions'
 describe('guitar and context',()=>{
  it('turns high E frets into notes',()=>expect(highENotes(parseTopNoteFrets('0 → 2 → 3')!)).toEqual(['E','F#','G']))
  it('makes tab and accessible text',()=>{const v=voicingsFor('Am')[0]!;expect(textTab(v)).toContain('e|--0--');expect(accessibleDescription(v)).toContain('low E muted')})
@@ -27,5 +28,7 @@ describe('saving and sharing',()=>{
 })
 describe('song sections',()=>{
  it('numbers linked section appearances',()=>{const song=createSong(['E','Am']);song.sections[0]!.kind='verse';song.sections[0]!.name=undefined;song.arrangement.push(newInstance(song.sections[0]!.id));expect(song.arrangement.map(item=>sectionLabel(song,item.id))).toEqual(['Verse 1','Verse 2'])})
- it('uses section purpose to shape starter ideas',()=>{const chorus=sectionStarters(['E','Am'],'chorus'),bridge=sectionStarters(['E','Am'],'bridge');expect(chorus.length).toBeGreaterThan(0);expect(bridge.length).toBeGreaterThan(0);expect(chorus[0]?.path).not.toEqual(bridge[0]?.path)})
+ it('uses the whole song and section purpose to shape starter ideas',()=>{const song=createSong(['E','Am']),after=song.arrangement[0]!.id,chorus=wholeSongSectionStarters(song,after,'chorus'),bridge=wholeSongSectionStarters(song,after,'bridge');expect(chorus.length).toBe(3);expect(bridge.length).toBe(3);expect(chorus[0]?.path).not.toEqual(bridge[0]?.path);expect(chorus[0]?.evidence.some(item=>item.includes('strongest center'))).toBe(true)})
+ it('uses earlier sections and both arrangement boundaries as evidence',()=>{const song=createSong(['C','E','Am','F','G']),pre=newSection('prechorus',{chords:['F','C','Em'],voicingIds:[null,null,null],customFrets:[null,null,null]});song.sections.push(pre);const preInstance=newInstance(pre.id);song.arrangement.push(preInstance);const chorus=wholeSongSectionStarters(song,preInstance.id,'chorus')[0]!;expect(chorus.evidence.some(item=>item.includes('2 written sections'))).toBe(true);expect(chorus.evidence.some(item=>item.includes('ending Em'))).toBe(true);const between=wholeSongSectionStarters(song,song.arrangement[0]!.id,'chorus')[0]!;expect(between.evidence.some(item=>item.includes('following section'))).toBe(true)})
+ it('transposes candidates instead of falling back to the original A minor catalog',()=>{const song=createSong(['D','Bm','G','A']),suggestions=wholeSongSectionStarters(song,song.arrangement[0]!.id,'chorus');expect(suggestions[0]?.evidence[0]).toMatch(/D major|B minor/);expect(suggestions.some(item=>item.evidence.some(evidence=>evidence.includes('guitar route')))).toBe(true);expect(suggestions.map(item=>item.path).some(path=>path.join('|')==='F|C|G')).toBe(false)})
 })
