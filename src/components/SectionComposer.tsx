@@ -1,0 +1,15 @@
+import {useMemo,useState} from 'react'
+import {sectionKinds,sectionStarters,type SectionDefinition,type SectionKind,type SectionStarter} from '../core/song/sections'
+
+export type SectionCreateChoice={kind:SectionKind;mode:'reuse'|'variation'|'blank'|'starter';sourceId?:string;starter?:SectionStarter;name?:string}
+export function SectionComposer({sections,previousChords,onCreate,onCancel}:{sections:SectionDefinition[];previousChords:string[];onCreate:(choice:SectionCreateChoice)=>void;onCancel:()=>void}){
+ const [kind,setKind]=useState<SectionKind|null>(null),[fresh,setFresh]=useState(false),[name,setName]=useState('')
+ const existing=kind?sections.filter(section=>section.kind===kind):[],starters=useMemo(()=>kind?sectionStarters(previousChords,kind):[],[previousChords,kind])
+ return <section className="section-composer"><header><div><span className="eyebrow">Build the song</span><h3>{kind?`Add ${sectionKinds.find(item=>item.id===kind)?.label}`:'What comes next?'}</h3><p>{kind?'Choose whether this section reuses an idea or begins somewhere new.':'A label gives the engine a useful intention, never a rigid formula.'}</p></div><button className="close-shapes" onClick={onCancel} aria-label="Close add section panel">×</button></header>
+ {!kind?<div className="section-kind-grid">{sectionKinds.map(item=><button onClick={()=>setKind(item.id)} key={item.id}><strong>{item.label}</strong><small>{item.purpose}</small></button>)}</div>:<>
+  {kind==='custom'&&<label className="custom-section-name"><span>Section name</span><input value={name} onChange={event=>setName(event.target.value)} placeholder="e.g. Refrain or Solo"/></label>}
+  {existing.length&&!fresh?<div className="section-origin"><button onClick={()=>onCreate({kind,mode:'reuse',sourceId:existing[0]!.id,name:name||undefined})}><b>↗</b><span><strong>Reuse {existing[0]!.name||sectionKinds.find(item=>item.id===kind)?.label}</strong><small>Keep both appearances linked. Changes update everywhere.</small></span></button><button onClick={()=>onCreate({kind,mode:'variation',sourceId:existing[0]!.id,name:name||undefined})}><b>≈</b><span><strong>Create a variation</strong><small>Copy its chords and shapes, then edit independently.</small></span></button><button onClick={()=>setFresh(true)}><b>＋</b><span><strong>Start a new {sectionKinds.find(item=>item.id===kind)?.label.toLowerCase()}</strong><small>Begin blank or ask for section-aware starting ideas.</small></span></button></div>:<div className="fresh-section"><div className="starter-heading"><span className="composer-label">Help me start it</span><button onClick={()=>onCreate({kind,mode:'blank',name:name||undefined})}>Start completely blank</button></div><div className="starter-grid">{starters.map(starter=><button onClick={()=>onCreate({kind,mode:'starter',starter,name:name||undefined})} key={starter.id}><strong>{starter.title}</strong><span>{starter.path.join(' → ')}</span><small>{starter.description}</small></button>)}</div></div>}
+  <button className="back-section" onClick={()=>{if(fresh&&existing.length)setFresh(false);else setKind(null)}}>← Back</button>
+ </>}
+ </section>
+}

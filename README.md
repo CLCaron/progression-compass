@@ -54,13 +54,15 @@ The chord finder reverses that relationship: a six-string shape such as `320033`
 
 “Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 
+The Song Map separates reusable section definitions from their appearances in the arrangement. A repeated verse or chorus can stay linked, become an independent variation, or start fresh. Section-aware starters translate roles such as chorus, bridge, and outro into different recommendation intentions while leaving every result editable.
+
 ## Context ladder
 
-Suggestions appear with chords alone. Emotional intent is one tap. When the selected E and Am shapes actually preserve an open high E, the app asks whether that matters. Only “I move that note” reveals the fret strip. Style and song section remain behind “Refine suggestions.”
+Suggestions appear with chords alone. Emotional intent is one tap. When the selected E and Am shapes actually preserve an open high E, the app asks whether that matters. Only “I move that note” reveals the fret strip. Style remains behind “Refine suggestions,” while the active Song Map section supplies structural context automatically.
 
 ## Saving and sharing
 
-Saves use a validated `{ version: 2, progressions: [...] }` envelope and include the selected voicing for every chord. Version 1 saves migrate locally with default shapes; invalid or corrupt browser data returns an empty safe state. Sharing stays intentionally compact and encodes only version, chords, and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
+Saves use a validated `{ version: 3, songs: [...] }` envelope and include section definitions, arrangement order, selected voicings, and custom shapes. Version 1 and 2 saves migrate into a single editable section; invalid or corrupt browser data returns an empty safe state. Sharing currently stays intentionally compact and exports the active section’s chords and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
 
 ## Where to add new musical rules
 

@@ -4,7 +4,8 @@ import {accessibleDescription,guitarRoutes,isValidVoicing,progressionTab,textTab
 import {identifyChord,parseShapeCode,shapeNoteNames} from '../core/guitar/finder'
 import {generateSuggestions} from '../core/suggestions/engine'
 import {analyzeProgression} from '../core/theory/analysis'
-import {isSaveEnvelope,parseShare,readSavedProgressions,serializeShare} from '../core/serialization/data'
+import {isSaveEnvelope,parseShare,readSavedSongs,serializeShare} from '../core/serialization/data'
+import {createSong,newInstance,sectionLabel,sectionStarters} from '../core/song/sections'
 describe('guitar and context',()=>{
  it('turns high E frets into notes',()=>expect(highENotes(parseTopNoteFrets('0 → 2 → 3')!)).toEqual(['E','F#','G']))
  it('makes tab and accessible text',()=>{const v=voicingsFor('Am')[0]!;expect(textTab(v)).toContain('e|--0--');expect(accessibleDescription(v)).toContain('low E muted')})
@@ -21,6 +22,10 @@ describe('recommendations',()=>{
 describe('saving and sharing',()=>{
  it('round trips a URL',()=>expect(parseShare(serializeShare(['E','Am'],'A-minor'))).toEqual({chords:['E','Am'],key:'A-minor'}))
  it('rejects corrupt saved data',()=>expect(isSaveEnvelope({version:1,progressions:[{bad:true}]})).toBe(false))
- it('accepts saved guitar shape choices',()=>expect(isSaveEnvelope({version:2,progressions:[{id:'1',name:'Idea',chords:['G'],voicingIds:[null],customFrets:[[3,2,0,0,3,3]],tempo:90,updatedAt:'today'}]})).toBe(true))
- it('migrates version 1 saves with empty shape choices',()=>expect(readSavedProgressions({version:1,progressions:[{id:'1',name:'Old idea',chords:['E','Am'],tempo:90,updatedAt:'today'}]})?.[0]?.voicingIds).toEqual([null,null]))
+ it('accepts saved songs with sections and custom shapes',()=>{const song=createSong(['G'],[null],[[3,2,0,0,3,3]]);expect(isSaveEnvelope({version:3,songs:[{id:'1',name:'Song',song,tempo:90,updatedAt:'today'}]})).toBe(true)})
+ it('migrates version 1 saves into a single section',()=>expect(readSavedSongs({version:1,progressions:[{id:'1',name:'Old idea',chords:['E','Am'],tempo:90,updatedAt:'today'}]})?.[0]?.song.sections[0]?.progression.voicingIds).toEqual([null,null]))
+})
+describe('song sections',()=>{
+ it('numbers linked section appearances',()=>{const song=createSong(['E','Am']);song.sections[0]!.kind='verse';song.sections[0]!.name=undefined;song.arrangement.push(newInstance(song.sections[0]!.id));expect(song.arrangement.map(item=>sectionLabel(song,item.id))).toEqual(['Verse 1','Verse 2'])})
+ it('uses section purpose to shape starter ideas',()=>{const chorus=sectionStarters(['E','Am'],'chorus'),bridge=sectionStarters(['E','Am'],'bridge');expect(chorus.length).toBeGreaterThan(0);expect(bridge.length).toBeGreaterThan(0);expect(chorus[0]?.path).not.toEqual(bridge[0]?.path)})
 })
