@@ -44,13 +44,15 @@ Import this folder's GitHub repository in Vercel. Vercel detects Vite automatica
 
 ## How the engine works
 
-Chord parsing keeps the entered symbol separate from normalized root, quality, extensions, bass, and pitch classes. The analyzer scores major and natural-minor centers from chord membership, tonic placement, dominant motion, and common borrowed movement. It deliberately keeps several plausible readings and uses labels—not fake percentages.
+Chord parsing keeps the entered symbol separate from normalized root, quality, extensions, bass, and pitch classes. The analyzer scores major and natural-minor centers from chord membership, chord-quality agreement, tonic placement, dominant motion, and common borrowed movement. It deliberately keeps several plausible readings and uses labels—not fake percentages.
 
 Recommendations begin with curated songwriting routes, then score them against the selected tonal reading, emotional direction, common tones, ringing-high-E preference, and optional top note. Every card carries structured evidence; copy and emotion never become the source of musical truth. This MVP targets common songwriting harmony, not exhaustive jazz or chromatic analysis.
 
 Guitar voicings are data objects containing six standard-tuning fret values from low E to high E. `null` means muted and `0` means open. Visual diagrams, text tab, accessible descriptions, exact-shape audio, and pedal-tone detection all consume that same data. Common major, minor, and dominant-seventh chords combine curated open shapes with movable CAGED E- and A-form shapes.
 
-The chord finder reverses that relationship: a six-string shape such as `320033` becomes sounding notes and ranked chord candidates. It understands muted strings, inversions, doubled notes, and common chord extensions. Choosing a result preserves the exact entered shape in progression history and local saves.
+The chord finder reverses that relationship: a six-string shape such as `320033` becomes sounding notes and ranked chord candidates. It understands muted strings, inversions, doubled notes, and common chord extensions. A match is previewed before it is applied; editing shows the old and new names together, preserves the exact fingering, and opens the saved shape afterward for confirmation.
+
+Chord entry teaches in context. Selecting a chord character shows its interval formula, actual notes, and a plain-language explanation. Focused comparisons distinguish commonly confused symbols such as `sus2` versus `add9` and `7` versus `maj7` without requiring a separate theory lesson.
 
 “Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 

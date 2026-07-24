@@ -7,18 +7,18 @@ type Mode='major'|'minor'
 type Tag='steady'|'open'|'build'|'arrival'|'resolve'|'dark'|'contrast'|'descending'
 interface Template{id:string;title:string;mode:Mode;steps:{degree:number;suffix?:string}[];tags:Tag[];base:number}
 const templates:Template[]=[
- {id:'major-center',title:'Center the hook',mode:'major',steps:[{degree:0},{degree:4},{degree:5},{degree:3}],tags:['arrival','steady','open'],base:65},
- {id:'major-open',title:'Open the horizon',mode:'major',steps:[{degree:3},{degree:0},{degree:4}],tags:['open','arrival'],base:68},
- {id:'major-lift',title:'Lift through familiar ground',mode:'major',steps:[{degree:5},{degree:3},{degree:0},{degree:4}],tags:['build','open'],base:63},
- {id:'major-cadence',title:'Make the arrival clear',mode:'major',steps:[{degree:1},{degree:4},{degree:0}],tags:['build','resolve','arrival'],base:66},
- {id:'major-climb',title:'Raise the energy',mode:'major',steps:[{degree:0},{degree:2},{degree:3},{degree:4}],tags:['build','steady'],base:58},
- {id:'major-fall',title:'Let it settle downward',mode:'major',steps:[{degree:5},{degree:4},{degree:3},{degree:0}],tags:['descending','resolve'],base:61},
- {id:'minor-open',title:'Open the minor horizon',mode:'minor',steps:[{degree:5},{degree:2},{degree:6}],tags:['open','steady'],base:67},
- {id:'minor-center',title:'Gather around home',mode:'minor',steps:[{degree:2},{degree:6},{degree:0},{degree:5}],tags:['arrival','open'],base:64},
- {id:'minor-cadence',title:'Lean into the pull',mode:'minor',steps:[{degree:3},{degree:4,suffix:'7'},{degree:0}],tags:['build','resolve','arrival'],base:69},
- {id:'minor-shadow',title:'Follow the descending shadow',mode:'minor',steps:[{degree:0},{degree:6},{degree:5},{degree:4,suffix:'7'}],tags:['dark','descending','build'],base:63},
- {id:'minor-rise',title:'Rise back toward home',mode:'minor',steps:[{degree:5},{degree:6},{degree:0}],tags:['build','arrival'],base:62},
- {id:'minor-wide',title:'Widen the frame',mode:'minor',steps:[{degree:0},{degree:3},{degree:5},{degree:4,suffix:'7'}],tags:['contrast','build'],base:58}
+ {id:'major-center',title:'Home-key loop',mode:'major',steps:[{degree:0},{degree:4},{degree:5},{degree:3}],tags:['arrival','steady','open'],base:65},
+ {id:'major-open',title:'Begin on the IV chord',mode:'major',steps:[{degree:3},{degree:0},{degree:4}],tags:['open','arrival'],base:68},
+ {id:'major-lift',title:'Begin from the relative minor',mode:'major',steps:[{degree:5},{degree:3},{degree:0},{degree:4}],tags:['build','open'],base:63},
+ {id:'major-cadence',title:'Build toward the tonic',mode:'major',steps:[{degree:1},{degree:4},{degree:0}],tags:['build','resolve','arrival'],base:66},
+ {id:'major-climb',title:'Step upward through the key',mode:'major',steps:[{degree:0},{degree:2},{degree:3},{degree:4}],tags:['build','steady'],base:58},
+ {id:'major-fall',title:'Descend to the tonic',mode:'major',steps:[{degree:5},{degree:4},{degree:3},{degree:0}],tags:['descending','resolve'],base:61},
+ {id:'minor-open',title:'Relative-major lift',mode:'minor',steps:[{degree:5},{degree:2},{degree:6}],tags:['open','steady'],base:67},
+ {id:'minor-center',title:'Return to the minor tonic',mode:'minor',steps:[{degree:2},{degree:6},{degree:0},{degree:5}],tags:['arrival','open'],base:64},
+ {id:'minor-cadence',title:'Strong minor resolution',mode:'minor',steps:[{degree:3},{degree:4,suffix:'7'},{degree:0}],tags:['build','resolve','arrival'],base:69},
+ {id:'minor-shadow',title:'Descending minor line',mode:'minor',steps:[{degree:0},{degree:6},{degree:5},{degree:4,suffix:'7'}],tags:['dark','descending','build'],base:63},
+ {id:'minor-rise',title:'Rise to the minor tonic',mode:'minor',steps:[{degree:5},{degree:6},{degree:0}],tags:['build','arrival'],base:62},
+ {id:'minor-wide',title:'Broader minor color',mode:'minor',steps:[{degree:0},{degree:3},{degree:5},{degree:4,suffix:'7'}],tags:['contrast','build'],base:58}
 ]
 const scale={major:[0,2,4,5,7,9,11],minor:[0,2,3,5,7,8,10]}
 const qualities={major:['','m','m','','','m','dim'],minor:['m','dim','','m','m','','']}
