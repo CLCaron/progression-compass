@@ -25,6 +25,18 @@ function romanFor(c:ParsedChord,t:number,mode:'major'|'minor'){
   return c.quality==='minor'?base.toLowerCase():base
 }
 
+export interface TonalRelationship{kind:'same'|'relative'|'parallel'|'contrast';title:string;explanation:string;effect:string}
+const tonicPc=(key:KeyInterpretation)=>parseChord(key.tonic)?.rootPc??0
+export function describeTonalRelationship(local:KeyInterpretation|undefined,wholeSong:KeyInterpretation|undefined):TonalRelationship|null{
+  if(!local||!wholeSong)return null
+  const localPc=tonicPc(local),songPc=tonicPc(wholeSong)
+  if(local.id===wholeSong.id)return{kind:'same',title:'The section supports the song’s center',explanation:`Both this section and the full song point toward ${wholeSong.tonic} ${wholeSong.mode} as home.`,effect:'That continuity can make the form feel grounded even when the chords or energy change.'}
+  if(local.mode!==wholeSong.mode&&localPc===songPc)return{kind:'parallel',title:'Same home note, different color',explanation:`${local.tonic} ${local.mode} and ${wholeSong.tonic} ${wholeSong.mode} are parallel keys: they share a tonic but change part of the scale.`,effect:`The section can feel ${local.mode==='minor'?'darker or more inward':'brighter or more direct'} without losing the song’s home note.`}
+  const relative=(local.mode==='major'&&wholeSong.mode==='minor'&&localPc===(songPc+3)%12)||(local.mode==='minor'&&wholeSong.mode==='major'&&songPc===(localPc+3)%12)
+  if(relative)return{kind:'relative',title:'Same notes, different sense of home',explanation:`${local.tonic} ${local.mode} and ${wholeSong.tonic} ${wholeSong.mode} are relative keys. They share the same basic note collection, but a different chord feels like home.`,effect:`That can make this section feel ${local.mode==='major'?'brighter and more open':'more intimate or shadowed'} without sounding disconnected from the song.`}
+  return{kind:'contrast',title:'A genuine change of harmonic perspective',explanation:`This section leans toward ${local.tonic} ${local.mode}, while the whole song leans toward ${wholeSong.tonic} ${wholeSong.mode}.`,effect:'That contrast is not automatically a problem. Listen for whether the boundary feels intentional and whether the return makes sense to your ear.'}
+}
+
 export function analyzeProgression(symbols:string[]):KeyInterpretation[]{
   const chords=symbols.map(parseChord).filter((c):c is ParsedChord=>!!c)
   if(!chords.length)return[]
@@ -38,9 +50,12 @@ export function analyzeProgression(symbols:string[]):KeyInterpretation[]{
       let v=degree>=0?2:0
       // Matching the chord quality matters as much as merely finding its root in
       // the scale. This keeps relative keys from winning on root membership alone.
-      if(degree>=0&&c.quality===expectedQualities[degree])v+=2
+      const qualityMatches=degree>=0&&c.quality===expectedQualities[degree]
+      const minorDominant=mode==='minor'&&o===7&&c.quality==='major'
+      if(qualityMatches)v+=2
+      else if(degree>=0&&!minorDominant)v-=1
       if(o===0)v+=2+(i===chords.length-1?2:0)
-      if(mode==='minor'&&o===7&&c.quality==='major')v+=3
+      if(minorDominant)v+=3
       if(mode==='major'&&o===5&&c.quality==='minor')v+=2
       return sum+v
     },0)

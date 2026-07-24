@@ -62,7 +62,7 @@ The Song Map separates reusable section definitions from their appearances in th
 
 ## Context ladder
 
-Suggestions appear with chords alone. Emotional intent is one tap. When the selected E and Am shapes actually preserve an open high E, the app asks whether that matters. Only “I move that note” reveals the fret strip. Style remains behind “Refine suggestions,” while the active Song Map section supplies structural context automatically.
+The tonal panel distinguishes the strongest local reading of the active section from the center inferred across all uniquely written sections. It explains same-key continuity, relative major/minor shifts, parallel-key color, and stronger tonal contrast in songwriting language. The scorer rewards matching chord quality, recognizes the major dominant in minor, and demotes roots whose chord quality conflicts with the proposed key. Suggestions appear with chords alone. Emotional intent is one tap. When the selected E and Am shapes actually preserve an open high E, the app asks whether that matters. Only “I move that note” reveals the fret strip. Style remains behind “Refine suggestions,” while the active Song Map section supplies structural context automatically.
 
 ## Saving and sharing
 
