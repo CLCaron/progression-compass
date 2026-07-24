@@ -1,7 +1,7 @@
 import {guitarRoutes,customVoicing,voicingsFor,type GuitarVoicing} from '../guitar/voicings'
 import {analyzeProgression} from '../theory/analysis'
 import {noteNameForPc,parseChord,sharedPitchClasses} from '../theory/chords'
-import {sectionKinds,type ProgressionState,type SectionKind,type SectionStarter,type SongState} from './sections'
+import {sectionInsertionIndex,sectionKinds,type InsertionPosition,type ProgressionState,type SectionKind,type SectionStarter,type SongState} from './sections'
 
 type Mode='major'|'minor'
 type Tag='steady'|'open'|'build'|'arrival'|'resolve'|'dark'|'contrast'|'descending'
@@ -31,11 +31,11 @@ const chordFor=(tonic:number,mode:Mode,step:{degree:number;suffix?:string})=>`${
 const boundaryEvidence=(from:string|undefined,to:string|undefined,label:string)=>{const a=from&&parseChord(from),b=to&&parseChord(to);if(!a||!b)return null;const shared=sharedPitchClasses(a,b);return shared.length?`${to} keeps ${shared.map(noteNameForPc).join(' and ')} from the ${label} ending ${from}.`:`${from} → ${to} creates a clean ${Math.min((b.rootPc-a.rootPc+12)%12,(a.rootPc-b.rootPc+12)%12)}-semitone root move at the ${label} boundary.`}
 const followingEvidence=(from:string|undefined,to:string|undefined)=>{const a=from&&parseChord(from),b=to&&parseChord(to);if(!a||!b)return null;const shared=sharedPitchClasses(a,b);return shared.length?`${from} carries ${shared.map(noteNameForPc).join(' and ')} into the following section’s opening ${to}.`:`${from} leaves a ${Math.min((b.rootPc-a.rootPc+12)%12,(a.rootPc-b.rootPc+12)%12)}-semitone root move into the following section’s ${to}.`}
 
-export function wholeSongSectionStarters(song:SongState,afterInstanceId:string,kind:SectionKind):SectionStarter[]{
+export function wholeSongSectionStarters(song:SongState,anchorInstanceId:string,kind:SectionKind,position:InsertionPosition='after'):SectionStarter[]{
  const allChords=song.sections.flatMap(section=>section.progression.chords),interpretation=analyzeProgression(allChords)[0]??analyzeProgression(song.sections[0]?.progression.chords??[])[0]
- const tonic=interpretation?parseChord(interpretation.tonic)?.rootPc??0:0,mode:Mode=interpretation?.mode??'major',activeIndex=song.arrangement.findIndex(item=>item.id===afterInstanceId)
- const previous=song.sections.find(section=>section.id===song.arrangement[activeIndex]?.sectionId)?.progression??song.sections[0]?.progression??{chords:[],voicingIds:[],customFrets:[]}
- const following=song.sections.find(section=>section.id===song.arrangement[activeIndex+1]?.sectionId)?.progression
+ const tonic=interpretation?parseChord(interpretation.tonic)?.rootPc??0:0,mode:Mode=interpretation?.mode??'major',insertionIndex=sectionInsertionIndex(song,anchorInstanceId,position)
+ const previous=song.sections.find(section=>section.id===song.arrangement[insertionIndex-1]?.sectionId)?.progression??{chords:[],voicingIds:[],customFrets:[]}
+ const following=song.sections.find(section=>section.id===song.arrangement[insertionIndex]?.sectionId)?.progression
  const previousRoots=rootsOf(previous.chords),songRoots=rootsOf(allChords),existingSequences=new Set(song.sections.map(section=>section.progression.chords.join('|'))),anchor=selectedVoicings(previous).at(-1)
  const modes:Mode[]=kind==='bridge'||kind==='instrumental'?[mode,mode==='major'?'minor':'major']:[mode]
  const candidates=modes.flatMap(candidateMode=>templates.filter(template=>template.mode===candidateMode).map(template=>{
@@ -53,7 +53,7 @@ export function wholeSongSectionStarters(song:SongState,afterInstanceId:string,k
   const familiar=candidateRoots.filter(root=>songRoots.includes(root)).length,newRoots=new Set(candidateRoots.filter(root=>!songRoots.includes(root))).size
   const guitarEvidence=preferredRoute&&anchor?(preferredKind==='expressive'?`The expressive guitar route moves ${registerShift?`${registerShift} fret${registerShift===1?'':'s'}`:'into a contrasting voicing'} from the last selected ${previous.chords.at(-1)??''} shape.`:`The ${preferredRoute.title.toLowerCase()} guitar route begins ${registerShift?`${registerShift} fret${registerShift===1?'':'s'} away`:'in the same position'} as the last selected shape.`):preferredRoute?'A complete guitar route is available for every chord.':'Some chords need additional guitar voicings.'
   const evidence=[`${interpretation?.tonic??'C'} ${mode} is the strongest center across ${song.sections.filter(section=>section.progression.chords.length).length||1} written section${song.sections.filter(section=>section.progression.chords.length).length===1?'':'s'}.`,boundaryEvidence(previous.chords.at(-1),path[0],'previous section'),following?followingEvidence(path.at(-1),following.chords[0]):null,kind==='bridge'||kind==='instrumental'?`${newRoots} new root${newRoots===1?'':'s'} create${newRoots===1?'s':''} contrast with the existing song.`:`${familiar} of ${candidateRoots.length} chord roots already belong to the song’s harmonic vocabulary.`,guitarEvidence].filter((item):item is string=>Boolean(item))
-  const role=sectionKinds.find(item=>item.id===kind)?.label.toLowerCase()??'section',description=`Built as a ${role} after ${previous.chords.join(' → ')||'the current section'}, balancing ${kind==='bridge'?'contrast':'continuity'} with a clear section boundary.`
+  const role=sectionKinds.find(item=>item.id===kind)?.label.toLowerCase()??'section',placement=previous.chords.length?`after ${previous.chords.join(' → ')}`:following?.chords.length?`before ${following.chords.join(' → ')}`:'at the opening',description=`Built as a ${role} ${placement}, balancing ${kind==='bridge'?'contrast':'continuity'} with a clear section boundary.`
   return{id:`whole-${kind}-${candidateMode}-${template.id}`,title:template.title,path,description,evidence,score}
  })).sort((a,b)=>b.score-a.score)
  return candidates.filter((candidate,index,all)=>all.findIndex(item=>item.path.join('|')===candidate.path.join('|'))===index).slice(0,3)
