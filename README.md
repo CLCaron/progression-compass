@@ -58,7 +58,7 @@ Chord entry teaches in context. Selecting a chord character shows its interval f
 
 “Guitar Paths” ranks complete voicing sequences three ways: connected movement rewards small hand shifts and common tones; expressive movement rewards a deliberate register change; comfortable movement favors approachable shapes without forcing the hand to remain in one position. Each route can be heard, viewed as progression tab, and applied to the progression.
 
-The Song Map separates reusable section definitions from their appearances in the arrangement. A repeated verse or chorus can stay linked, become an independent variation, or start fresh. New-section suggestions are transposed into the strongest tonal center inferred across all unique written sections, then scored for the target role, the preceding and following boundaries, harmonic familiarity versus contrast, duplicate avoidance, and the last selected guitar position. Each starter exposes the evidence behind its ranking and remains fully editable.
+The Song Map separates reusable section definitions from their appearances in the arrangement. A repeated verse or chorus can stay linked, become an independent variation, or start fresh. Every section exposes an exact insertion point plus arrow and drag reordering. An optional structure coach suggests likely next roles for that location and explains familiar patterns without treating them as rules; editing a role also explains what that label usually contributes in its current placement. New-section chord suggestions are transposed into the strongest tonal center inferred across all unique written sections, then scored for the target role, the preceding and following boundaries, harmonic familiarity versus contrast, duplicate avoidance, and the last selected guitar position. Each starter exposes the evidence behind its ranking and remains fully editable.
 
 ## Context ladder
 
@@ -66,7 +66,7 @@ Suggestions appear with chords alone. Emotional intent is one tap. When the sele
 
 ## Saving and sharing
 
-Saves use a validated `{ version: 3, songs: [...] }` envelope and include section definitions, arrangement order, selected voicings, and custom shapes. Version 1 and 2 saves migrate into a single editable section; invalid or corrupt browser data returns an empty safe state. Sharing currently stays intentionally compact and exports the active section’s chords and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
+The song title is editable on the working sheet. A first save creates a local song; later saves update that same record, including title changes, instead of creating duplicates. Saves use a validated `{ version: 3, songs: [...] }` envelope and include section definitions, arrangement order, selected voicings, and custom shapes. Version 1 and 2 saves migrate into a single editable section; invalid or corrupt browser data returns an empty safe state. Sharing currently stays intentionally compact and exports the active section’s chords and selected key, for example `?v=1&chords=E%2CAm&key=A-minor`.
 
 ## Where to add new musical rules
 
