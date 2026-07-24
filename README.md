@@ -4,6 +4,8 @@ Progression Compass is a guitar-friendly songwriting companion. Enter the chords
 
 > Do not remove control. Remove the burden of understanding it before it becomes relevant.
 
+The interface is styled as a working songwriter's sheet rather than a dashboard. Light mode uses warm paper and ink; dark mode becomes a night-writing desk with cream notation. The first visit follows the device preference, and an accessible header switch stores the user's choice locally.
+
 ## Technology
 
 React 19, strict TypeScript, Vite, modern CSS, Vitest, Web Audio, and browser localStorage. There is no backend, account, paid API, environment variable, or music-theory dependency. The small internal theory engine makes its evidence deterministic and testable.

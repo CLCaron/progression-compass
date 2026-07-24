@@ -15,6 +15,7 @@
   <meta name="twitter:description" content="A working page for unfinished songs."/>
   <meta name="twitter:image" content="https://progression-compass.vercel.app/og.png"/>
   <title>Progression Compass</title>
+  <script>try{const saved=localStorage.getItem('progression-compass-theme');document.documentElement.dataset.theme=saved==='light'||saved==='dark'?saved:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch{document.documentElement.dataset.theme='light'}</script>
  </head>
  <body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
 </html>
